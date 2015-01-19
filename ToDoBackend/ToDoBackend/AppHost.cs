@@ -11,13 +11,12 @@ namespace ToDoBackend
     public class AppHost : AppHostBase
     {
         public AppHost() : base(
-            "ToDoBackend",typeof(ToDoService).Assembly) 
+            "ToDoBackend", typeof (ToDoService).Assembly)
         { }
 
         public override void Configure(Container container)
         {
-            Plugins.Add(new CorsFeature(allowedOrigins: "*", allowedMethods: "GET, POST, PUT, DELETE, PATCH, OPTIONS"));
-
+            Plugins.Add(new CorsFeature());
             var dbFactory = new OrmLiteConnectionFactory(":memory:", SqliteDialect.Provider);
             container.Register<IDbConnectionFactory>(dbFactory);
             container.RegisterAutoWired<ToDoService>();
@@ -25,6 +24,7 @@ namespace ToDoBackend
             {
                 db.DropAndCreateTable<Item>();
             }
+
         }
     }
 }
