@@ -41,7 +41,7 @@ namespace ToDoBackend.Tests
             _appHost.Dispose();
         }
 
-        [SetUp,Ignore]
+        [SetUp]
         public void TestSetUp()
         {
             var dbFactory = _appHost.TryResolve<IDbConnectionFactory>();
@@ -51,7 +51,7 @@ namespace ToDoBackend.Tests
             }
         }
 
-        [Test]
+        [Test,Ignore]
         public void ShouldCreateItemsWithWorkingUrls()
         {
             var client = new JsonServiceClient(BaseUrl);
