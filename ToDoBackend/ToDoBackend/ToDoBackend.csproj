@@ -91,6 +91,17 @@
     <Content Include="bin\x86\SQLite.Interop.dll" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
+    <Content Include="www\css\mocha.css" />
+    <Content Include="www\css\style.css" />
+    <Content Include="www\index.html" />
+    <Content Include="www\js\lib\chai-as-promised.js" />
+    <Content Include="www\js\lib\chai.js" />
+    <Content Include="www\js\lib\jquery.js" />
+    <Content Include="www\js\lib\mocha.js" />
+    <Content Include="www\js\lib\q.js" />
+    <Content Include="www\js\lib\underscore.js" />
+    <Content Include="www\js\setup.js" />
+    <Content Include="www\js\specs.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppHost.cs" />
@@ -111,6 +122,7 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+    <Content Include="www\js\lib\underscore-min.map" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
