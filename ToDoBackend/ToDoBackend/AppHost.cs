@@ -19,8 +19,8 @@ namespace ToDoBackend
         {
             Plugins.Add(new CorsFeature());
             var dbFactory = new OrmLiteConnectionFactory(
-                "~/App_Data/db.sqlite".MapHostAbsolutePath()
-                , SqliteDialect.Provider);
+                "~/App_Data/db.sqlite".MapHostAbsolutePath(), 
+                SqliteDialect.Provider);
             container.Register<IDbConnectionFactory>(dbFactory);
             container.RegisterAutoWired<ToDoService>();
             using (var db = dbFactory.OpenDbConnection())
