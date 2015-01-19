@@ -41,7 +41,7 @@ namespace ToDoBackend.Tests
             _appHost.Dispose();
         }
 
-        [SetUp]
+        [SetUp,Ignore]
         public void TestSetUp()
         {
             var dbFactory = _appHost.TryResolve<IDbConnectionFactory>();
