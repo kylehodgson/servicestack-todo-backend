@@ -6,7 +6,6 @@ using Funq;
 using ServiceStack;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
-
 namespace ToDoBackend
 {
     public class AppHost : AppHostBase
@@ -17,7 +16,6 @@ namespace ToDoBackend
 
         public override void Configure(Container container)
         {
-            Plugins.Add(new CorsFeature());
             var dbFactory = new OrmLiteConnectionFactory(
                 "DataSource=" + ("~/App_Data/db.sqlite".MapHostAbsolutePath()) + ";pooling=true", 
                 SqliteDialect.Provider);
