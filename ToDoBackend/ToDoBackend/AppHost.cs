@@ -18,7 +18,9 @@ namespace ToDoBackend
         public override void Configure(Container container)
         {
             Plugins.Add(new CorsFeature());
-            var dbFactory = new OrmLiteConnectionFactory(":memory:", SqliteDialect.Provider);
+            var dbFactory = new OrmLiteConnectionFactory(
+                "~/App_Data/db.sqlite".MapHostAbsolutePath()
+                , SqliteDialect.Provider);
             container.Register<IDbConnectionFactory>(dbFactory);
             container.RegisterAutoWired<ToDoService>();
             using (var db = dbFactory.OpenDbConnection())
