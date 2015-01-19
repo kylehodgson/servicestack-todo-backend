@@ -16,7 +16,7 @@ namespace ToDoBackend
 
         public override void Configure(Container container)
         {
-            Plugins.Add(new CorsFeature());
+            Plugins.Add(new CorsFeature(allowedMethods: "GET, POST, PUT, DELETE, PATCH, OPTIONS"));
             var dbFactory = new OrmLiteConnectionFactory(":memory:", SqliteDialect.Provider);
             container.Register<IDbConnectionFactory>(dbFactory);
             container.RegisterAutoWired<ToDoService>();
