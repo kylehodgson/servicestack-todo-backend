@@ -19,9 +19,13 @@ namespace ToDoBackend
             Plugins.Add(new CorsFeature(allowedMethods: "GET, POST, PUT, DELETE, PATCH, OPTIONS"));
             this.PreRequestFilters.Add((httpReq, httpRes) =>
             {
-                //Handles Request and closes Responses after emitting global HTTP Headers
                 if (httpReq.Verb == "OPTIONS")
-                    httpRes.EndRequest(); //add a 'using ServiceStack;'
+                {
+                    httpRes.AddHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+                    httpRes.AddHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
+                    httpRes.AddHeader("Access-Control-Max-Age", "1728000");
+                    httpRes.EndRequest(); 
+                }
             });
             var dbFactory = new OrmLiteConnectionFactory(":memory:", SqliteDialect.Provider);
             container.Register<IDbConnectionFactory>(dbFactory);
