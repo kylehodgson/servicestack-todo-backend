@@ -16,17 +16,9 @@ namespace ToDoBackend
 
         public override void Configure(Container container)
         {
-            Plugins.Add(new CorsFeature(allowedMethods: "GET, POST, PUT, DELETE, PATCH, OPTIONS"));
-            this.PreRequestFilters.Add((httpReq, httpRes) =>
-            {
-                if (httpReq.Verb == "OPTIONS")
-                {
-                    httpRes.AddHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-                    httpRes.AddHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
-                    httpRes.AddHeader("Access-Control-Max-Age", "1728000");
-                    httpRes.EndRequest(); 
-                }
-            });
+            Plugins.Add(new CorsFeature(
+                allowedOrigins: "*", 
+                allowedMethods: "GET, POST, PUT, DELETE, PATCH, OPTIONS"));
             var dbFactory = new OrmLiteConnectionFactory(":memory:", SqliteDialect.Provider);
             container.Register<IDbConnectionFactory>(dbFactory);
             container.RegisterAutoWired<ToDoService>();
