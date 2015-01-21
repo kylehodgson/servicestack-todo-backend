@@ -51,7 +51,7 @@ namespace ToDoBackend.Tests
             }
         }
 
-        [Test,Ignore]
+        [Test]
         public void ShouldCreateItemsWithWorkingUrls()
         {
             var client = new JsonServiceClient(BaseUrl);
