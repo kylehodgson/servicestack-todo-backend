@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Text.RegularExpressions;
 using System.Web;
 using Funq;
 using ServiceStack;
@@ -27,6 +25,15 @@ namespace ToDoBackend
                 db.DropAndCreateTable<Item>();
             }
 
+            SetConfig(new HostConfig{WebHostUrl = ApplicationUrl()});
+        }
+
+        private string ApplicationUrl()
+        {
+            //var siteName = System.Web.Hosting.HostingEnvironment.SiteName; 
+            Regex regex = new Regex("(" + HttpContext.Current.Request.Url.AbsolutePath + ")$");
+            var applicationUrl = regex.Replace(HttpContext.Current.Request.Url.AbsoluteUri, string.Empty);
+            return applicationUrl;
         }
     }
 }

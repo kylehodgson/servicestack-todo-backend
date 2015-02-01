@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Funq;
 using NUnit.Framework;
 using ServiceStack;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
-using ServiceStack.Testing;
 
 namespace ToDoBackend.Tests
 {
@@ -17,7 +14,7 @@ namespace ToDoBackend.Tests
     public class ToDoServiceContractTests
     {
         private ServiceStackHost _appHost;
-        private const string BaseUrl = "http://localhost:8888/";
+        public const string TestUrl = "http://localhost:8888/";
 
         [TestFixtureSetUp]
         public void FixtureSetUp()
@@ -29,10 +26,17 @@ namespace ToDoBackend.Tests
                     container.Register<IDbConnectionFactory>(
                         new OrmLiteConnectionFactory(":memory:", SqliteDialect.Provider));
                     container.RegisterAutoWired<ToDoService>();
-                }
+                },
+                AddPlugins = plugins =>
+                {
+                    plugins.Add(new CorsFeature(allowedOrigins: "*",
+                                                allowedMethods:
+                                                    "GET, POST, PUT, DELETE, PATCH, OPTIONS"));
+                },
+                BaseUrl = TestUrl
             }
             .Init()
-            .Start(BaseUrl);
+            .Start(TestUrl);
         }
 
         [TestFixtureTearDown]
@@ -54,11 +58,11 @@ namespace ToDoBackend.Tests
         [Test]
         public void ShouldCreateItemsWithWorkingUrls()
         {
-            var client = new JsonServiceClient(BaseUrl);
+            var client = new JsonServiceClient(TestUrl);
             var testTitle = "test item";
             var postedItem = client.Post(new NewItemRequest {title = testTitle});
 
-            var fetchedItem = (BaseUrl + postedItem.url)
+            var fetchedItem = postedItem.url
                 .GetJsonFromUrl()
                 .FromJson<Item>();
 
@@ -66,7 +70,26 @@ namespace ToDoBackend.Tests
             Assert.That(fetchedItem.title.Equals(testTitle));
             Assert.AreEqual(postedItem.title,fetchedItem.title);
         }
+
+        [Test]
+        public void ShouldAffirmPreFlightOptions()
+        {
+            var client = new JsonServiceClient(TestUrl)
+            {
+                RequestFilter = request =>
+                {
+                    request.Headers.Add("Origin", "http://www.example.com");
+                    request.Headers.Add("Access-Control-Request-Method", "POST");
+                    request.Headers.Add("Access-Control-Request-Headers",
+                                        "X-Requested-With");
+                }
+            };
+            var optionsResult = client.CustomMethod("OPTIONS", new PreFlight());
+            Assert.That(optionsResult.StatusCode.Equals(HttpStatusCode.OK));
+        }
     }
+
+    class PreFlight {}
 
     class TestAppHost : AppSelfHostBase
     {
@@ -75,12 +98,18 @@ namespace ToDoBackend.Tests
         { }
 
         public Action<Container> ConfigureContainer { get; set; }
+        public Action<List<IPlugin>> AddPlugins { get; set; }
+        public HostConfig HostConfig { get; set; }
+        public string BaseUrl { get; set; }
 
         public override void Configure(Container container)
         {
-            if (this.ConfigureContainer == null)
-                return;
-            this.ConfigureContainer(container);
+            if (this.ConfigureContainer != null) this.ConfigureContainer(container);
+            if (this.AddPlugins != null) this.AddPlugins(Plugins);
+            if (BaseUrl!=null) SetConfig(new HostConfig{WebHostUrl = BaseUrl}); 
+
         }
+
+  
     }
 }
