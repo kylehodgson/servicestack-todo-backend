@@ -1,5 +1,5 @@
-﻿using System.Text.RegularExpressions;
-using System.Web;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Funq;
 using ServiceStack;
 using ServiceStack.Data;
@@ -8,9 +8,13 @@ namespace ToDoBackend
 {
     public class AppHost : AppHostBase
     {
+        private readonly IISBindingManager _bindingManager;
+
         public AppHost() : base(
             "ToDoBackend", typeof (ToDoService).Assembly)
-        { }
+        {
+            _bindingManager = new IISBindingManager();
+        }
 
         public override void Configure(Container container)
         {
@@ -24,16 +28,8 @@ namespace ToDoBackend
             {
                 db.DropAndCreateTable<Item>();
             }
-
-            SetConfig(new HostConfig{WebHostUrl = ApplicationUrl()});
-        }
-
-        private string ApplicationUrl()
-        {
-            //var siteName = System.Web.Hosting.HostingEnvironment.SiteName; 
-            Regex regex = new Regex("(" + HttpContext.Current.Request.Url.AbsolutePath + ")$");
-            var applicationUrl = regex.Replace(HttpContext.Current.Request.Url.AbsoluteUri, string.Empty);
-            return applicationUrl;
+            var bindings = _bindingManager.GetBindings().ToList();
+            if (bindings.Count > 0) SetConfig(new HostConfig { WebHostUrl = bindings[0] });
         }
     }
 }

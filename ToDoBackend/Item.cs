@@ -19,12 +19,11 @@ namespace ToDoBackend
         public static Item ToItem(this NewItemRequest request)
         {
             var guid = Guid.NewGuid().ToString();
-            var absoluteUri = ServiceStackHost.Instance.Config.WebHostUrl.CombineWith((new ViewItemRequest {itemid = guid}).ToGetUrl());
             var item = new Item
             {
                 itemid = guid,
                 completed = false,
-                url = absoluteUri
+                url = new ViewItemRequest {itemid = guid}.ToAbsoluteUri()
             }.PopulateWith(request);
             return item;
         }
