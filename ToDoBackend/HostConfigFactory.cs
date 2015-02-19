@@ -21,9 +21,11 @@ namespace ToDoBackend
             var port = Environment.GetEnvironmentVariable("todobackend_port");
             var protocol = Environment.GetEnvironmentVariable("todobackend_protocol");
 
-            return host.IsNullOrEmpty() || protocol.IsNullOrEmpty() || port.IsNullOrEmpty()
+            return host.IsNullOrEmpty() || protocol.IsNullOrEmpty()
                        ? string.Empty
-                       : protocol + "://" + host + ":" + port;
+                       : protocol + "://" + host + (port.IsNullOrEmpty()
+                                                        ? ""
+                                                        : ":" + port);
         }
     }
 }

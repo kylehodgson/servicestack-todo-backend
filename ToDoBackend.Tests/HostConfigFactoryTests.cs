@@ -38,5 +38,17 @@ namespace ToDoBackend.Tests
             var url = hostConfig.WebHostUrl;
             Assert.That(url.Equals("ftp://localhost:1337"));
         }
+
+        [Test]
+        public void HostConfigUrlShouldReflectEnvironmentSettingsEvenWithoutPort()
+        {
+            Environment.SetEnvironmentVariable("todobackend_host", "www.google.com");
+            Environment.SetEnvironmentVariable("todobackend_protocol", "https");
+
+            var target = new HostConfigFactory();
+            var hostConfig = target.GetHostConfig();
+            var url = hostConfig.WebHostUrl;
+            Assert.That(url.Equals("https://www.google.com"));
+        }
     }
 }
