@@ -8,13 +8,10 @@ namespace ToDoBackend
 {
     public class AppHost : AppHostBase
     {
-        private readonly IISBindingManager _bindingManager;
 
         public AppHost() : base(
             "ToDoBackend", typeof (ToDoService).Assembly)
-        {
-            _bindingManager = new IISBindingManager();
-        }
+        { }
 
         public override void Configure(Container container)
         {
@@ -28,8 +25,7 @@ namespace ToDoBackend
             {
                 db.DropAndCreateTable<Item>();
             }
-            var bindings = _bindingManager.GetBindings().ToList();
-            if (bindings.Count > 0) SetConfig(new HostConfig { WebHostUrl = bindings[0] });
+            SetConfig(new HostConfigFactory().GetHostConfig());
         }
     }
 }

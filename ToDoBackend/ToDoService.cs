@@ -17,8 +17,8 @@ namespace ToDoBackend
     {
         public string itemid { get; set; }
         public string title { get; set; }
-        public bool completed { get; set; }
-        public int order { get; set; }
+        public bool? completed { get; set; }
+        public int? order { get; set; }
     }
 
     [Route("/items", "GET")]
@@ -63,7 +63,7 @@ namespace ToDoBackend
         public Item Patch(PatchItemRequest request)
         {
             var item = Db.SingleById<Item>(request.itemid)
-                .PopulateWith(request);
+                         .PopulateWithNonDefaultValues(request);
             Db.Save(item);
             return item;
         }
