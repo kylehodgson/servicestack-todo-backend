@@ -27,7 +27,7 @@ namespace ToDoBackend.Tests
         }
 
         [Test]
-        public void HostConfigUrlShouldReflectEnvironmentSettingsWhenSetProperly()
+        public void HostConfigUrlShouldReflectEnvironmentSettingsWhenFullySet()
         {
             Environment.SetEnvironmentVariable("todobackend_host","localhost");
             Environment.SetEnvironmentVariable("todobackend_port","1337");
@@ -40,7 +40,7 @@ namespace ToDoBackend.Tests
         }
 
         [Test]
-        public void HostConfigUrlShouldReflectEnvironmentSettingsEvenWithoutPort()
+        public void HostConfigUrlShouldntIncludePortWhenPortEnvironmentSettingIsntPresent()
         {
             Environment.SetEnvironmentVariable("todobackend_host", "www.google.com");
             Environment.SetEnvironmentVariable("todobackend_protocol", "https");

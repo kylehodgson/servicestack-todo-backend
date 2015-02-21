@@ -21,11 +21,23 @@ namespace ToDoBackend
             var port = Environment.GetEnvironmentVariable("todobackend_port");
             var protocol = Environment.GetEnvironmentVariable("todobackend_protocol");
 
-            return host.IsNullOrEmpty() || protocol.IsNullOrEmpty()
+            var binding = host.IsNullOrEmpty() || protocol.IsNullOrEmpty()
                        ? string.Empty
-                       : protocol + "://" + host + (port.IsNullOrEmpty()
-                                                        ? ""
-                                                        : ":" + port);
+                       : AssembleBinding(protocol, host, port);
+
+            return binding;
+        }
+
+        private static string AssembleBinding(string protocol, string host, string port)
+        {
+            if (port.IsNullOrEmpty())
+            {
+                return protocol + "://" + host;
+            }
+            else
+            {
+                return protocol + "://" + host + ":" + port;
+            }
         }
     }
 }
