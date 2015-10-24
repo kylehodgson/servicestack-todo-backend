@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using ServiceStack.Web;
@@ -55,7 +56,12 @@ namespace ToDoBackend
 
         public Item Post(NewItemRequest request)
         {
-            var item = request.ToItem();
+            var itemId = Guid.NewGuid().ToString();
+            var item = new Item
+            {
+                itemid = itemId,
+                url = CreateUrlFor(itemId)
+            }.PopulateWith(request);
             Db.Save(item);
             return item;
         }
@@ -76,6 +82,14 @@ namespace ToDoBackend
         public void Delete(DeleteItemRequest request)
         {
             Db.DeleteById<Item>(request.itemid);
+        }
+
+        private static string CreateUrlFor(string itemGuid)
+        {
+            return new ViewItemRequest
+            {
+                itemid = itemGuid
+            }.ToAbsoluteUri();
         }
     }
 }

@@ -5,7 +5,7 @@ namespace ToDoBackend
 {
     public class HostConfigFactory
     {
-        public const string DefaultBinding = "http://localhost:8888";
+        public const string DefaultBinding = "http://localhost:8888/";
 
         public HostConfig GetHostConfig()
         {

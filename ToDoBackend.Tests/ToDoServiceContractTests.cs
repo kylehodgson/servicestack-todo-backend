@@ -14,11 +14,15 @@ namespace ToDoBackend.Tests
     public class ToDoServiceContractTests
     {
         private ServiceStackHost _appHost;
-        public const string TestUrl = "http://localhost:8888/";
+        private string TestUrl;
 
         [TestFixtureSetUp]
         public void FixtureSetUp()
         {
+            var hostConfig = new HostConfigFactory().GetHostConfig();
+            this.TestUrl = hostConfig.WebHostUrl;
+            if (!this.TestUrl.EndsWith("/")) this.TestUrl += "/";
+
             _appHost = new TestAppHost("ToDoService Test AppHost", typeof(ToDoService).Assembly)
             {
                 ConfigureContainer = container =>
@@ -36,7 +40,7 @@ namespace ToDoBackend.Tests
                 BaseUrl = TestUrl
             }
             .Init()
-            .Start(TestUrl);
+            .Start(this.TestUrl);
         }
 
         [TestFixtureTearDown]
@@ -99,7 +103,6 @@ namespace ToDoBackend.Tests
 
         public Action<Container> ConfigureContainer { get; set; }
         public Action<List<IPlugin>> AddPlugins { get; set; }
-        public HostConfig HostConfig { get; set; }
         public string BaseUrl { get; set; }
 
         public override void Configure(Container container)

@@ -13,19 +13,4 @@ namespace ToDoBackend
         public string url { get; set; }
         public int order { get; set; }
     }
-
-    public static class NewItemRequestExtensions
-    {
-        public static Item ToItem(this NewItemRequest request)
-        {
-            var guid = Guid.NewGuid().ToString();
-            var item = new Item
-            {
-                itemid = guid,
-                completed = false,
-                url = new ViewItemRequest {itemid = guid}.ToAbsoluteUri()
-            }.PopulateWith(request);
-            return item;
-        }
-    }
 }
