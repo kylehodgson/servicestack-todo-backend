@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using ServiceStack;
 using ServiceStack.OrmLite;
 using ServiceStack.Web;
@@ -54,6 +55,7 @@ namespace ToDoBackend
             return Db.SingleById<Item>(request.itemid);
         }
 
+        [AddHeader(HttpStatusCode.Created)]
         public Item Post(NewItemRequest request)
         {
             var itemId = Guid.NewGuid().ToString();
