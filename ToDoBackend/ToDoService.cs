@@ -62,7 +62,7 @@ namespace ToDoBackend
             var item = new Item
             {
                 itemid = itemId,
-                url = CreateUrlFor(itemId)
+                url = base.Request.AbsoluteUri + "/" + itemId
             }.PopulateWith(request);
             Db.Save(item);
             return item;
@@ -84,14 +84,6 @@ namespace ToDoBackend
         public void Delete(DeleteItemRequest request)
         {
             Db.DeleteById<Item>(request.itemid);
-        }
-
-        private static string CreateUrlFor(string itemGuid)
-        {
-            return new ViewItemRequest
-            {
-                itemid = itemGuid
-            }.ToAbsoluteUri();
         }
     }
 }
